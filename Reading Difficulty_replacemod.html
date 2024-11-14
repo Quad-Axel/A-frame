@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realistic Model Demo</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene>
+    <!-- Preload models -->
+    <a-assets>
+      <a-asset id="kidModel" src="model/kid_reading.gltf"></a-asset>
+      <a-asset id="chair" src="model/chair/scene.gltf"></a-asset>
+      <a-asset id="shelf" src="model/book_shelf/scene.gltf"></a-asset>
+      <img id="skyTexture" src="img/library.jpg"> <!-- Skybox background image -->
+    </a-assets>
+
+    <!-- Skybox Background
+    <a-sky src="#skyTexture" color="#2E3234" rotation="5 185 0"></a-sky> -->
+
+    <!-- Camera and lighting -->
+    <a-entity id="player-camera" camera wasd-controls look-controls position="-0.5 1.5 2">
+      <a-cursor></a-cursor>
+    </a-entity>
+    <a-light type="ambient" color="#FFF"></a-light>
+
+    <!-- Model of a kid reading -->
+    <a-entity id="kid-reading" position="0 0 -2" scale="1 1 1" gltf-model="#kidModel"></a-entity>
+
+    <!-- Model of a chair -->
+    <a-entity id="chair" position="-1.6 0.6 -4.2" rotation="0 180 0" scale="0.5 0.5 0.5" gltf-model="#chair"></a-entity>
+
+    <!-- Model of a shelf -->
+    <a-entity id="shelf" position="2.5 -4 -8.2" scale="9 9 9" gltf-model="#shelf"></a-entity>
+
+
+    <!-- Text in front of the character -->
+    <a-text id="book-text" value="Once upon a time.........." color="black" position="-1 0.2 -0.9" rotation="-30 -180 0" width="2"></a-text>
+
+    <!-- 3D Possess Button -->
+    <a-box id="possess-button" position="-1.5 3 -3" width="1" height="0.4" depth="0.2" color="red" onclick="possessPerson()">
+      <a-text value="Possess" color="white" position="0 0 0.26" align="center"></a-text>
+    </a-box>
+  </a-scene>
+
+  <script>
+    const playerCamera = document.getElementById('player-camera');
+    const bookText = document.getElementById('book-text'); // Text element in front of the character
+    let isPossessed = false;
+
+    function possessPerson() {
+      // Shift the camera position to the "person's" perspective
+      playerCamera.setAttribute('position', '-1 1.2 -1.8'); // Position at the "person's" head
+      // Temporarily disable look-controls, set rotation, and re-enable
+      playerCamera.removeAttribute('look-controls');
+      playerCamera.setAttribute('rotation', '0 100 100'); // Rotate camera 180 degrees horizontally
+      playerCamera.setAttribute('wasd-controls', 'enabled: false'); // Disable movement
+      
+      // Re-enable look-controls if needed for look-around functionality
+        setTimeout(() => {
+            playerCamera.setAttribute('look-controls', 'enabled: true');
+        }, 100); // Re-enable look-controls after a short delay
+      
+      isPossessed = true;
+
+      // Change the text to garbled content
+      bookText.setAttribute('value', "jasijfadoihfaiejflja\n\nengaisoijfsoiejs\n\nsjefijseoifjsoij");
+
+      // Start the reading difficulty effect on the text
+      startReadingDifficulty();
+    }
+
+    function startReadingDifficulty() {
+      if (isPossessed) {
+        // Apply a shaking effect to the text
+        setInterval(() => {
+          // Random shaking effect on the text position
+          bookText.setAttribute('position', {
+            x: -1 + Math.random() * 0.02 - 0.01,
+            y: 0.2 + Math.random() * 0.02 - 0.01,
+            z: -0.9
+          });
+
+          // Random opacity to simulate fading
+          let opacity = Math.random() * 0.3 + 0.7;
+          bookText.setAttribute('opacity', opacity);
+        }, 50);
+      }
+    }
+  </script>
+</body>
+</html>
