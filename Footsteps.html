@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Footsteps Demo</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+</head>
+<body>
+  <a-scene>
+    <!--Models-->
+    <a-assets>
+        <a-asset id="snowing_scene" src="model/snow_field/scene.gltf"></a-asset>
+        <a-asset id="kidModel" src="model/woman_standing/untitled.glb"></a-asset>
+        <img id="footprintsImage" src="img/footsteps.png">
+    </a-assets>
+    <!-- Camera and lighting -->
+    <a-entity id="player-camera" camera wasd-controls look-controls position="-0.5 3.5 2">
+      <a-cursor></a-cursor>
+    </a-entity>
+    <a-light type="ambient" color="#FFF"></a-light>
+
+    <!--Model of snowing scene-->
+    <a-entity id="snowing_scene" position="-2 -0.3 -3" scale="3 3 3" gltf-model="#snowing_scene"></a-entity>
+
+    <!-- Model of a kid -->
+    <a-entity id="kid" position="0 0 -2" scale="1 1 1" gltf-model="#kidModel"></a-entity>
+
+    <!-- Footprints Image (Initially Hidden) -->
+    <a-image id="footprints" src="#footprintsImage" position="0 0.2 1" rotation="-90 0 -135" width="2" height="4" visible="false"></a-image>
+
+    <!-- Button -->
+    <a-box id="possess_button" position="0.2 4 -2" width="2" height="0.5" depth="0.2" color="red" onclick="possessPerson()">
+        <a-text id="button_text" value="Into her mind" color="white" position="0 0 0.26" align="center"></a-text>
+      </a-box>
+  </a-scene>
+
+  <script>
+    const playerCamera = document.getElementById('player-camera');
+    const bookText = document.getElementById('book-text'); // Access the text on the cube surface
+    let isPossessed = false;
+
+    function possessPerson() {
+      // Shift the camera position to the "person's" perspective
+      playerCamera.setAttribute('position', '0.2 2 -1.5'); // Position at the "person's" head
+      playerCamera.setAttribute('rotation', '-180 0 0'); // Adjust angles as needed (x y z)
+    //   playerCamera.setAttribute('wasd-controls', 'enabled: false'); // Disable movement
+
+      // Show the footprints image
+      footprints.setAttribute('visible', 'true');
+      kid.setAttribute('visible', 'false');
+      possess_button.setAttribute('visible', 'false');
+      
+
+      isPossessed = true;
+    }
+
+  </script>
+</body>
+</html>
